@@ -49,25 +49,33 @@ int
 main(int argc, char *argv[])
 {
 	int c, i;
+	char *e;
 
 	argv0 = argv[0];
 
 	while ((c = getopt(argc, argv, "n:")) != -1)
 		switch(c) {
                 case 'n':
-			minlen = atoll(optarg);
+			errno = 0;
+			minlen = strtoll(optarg, &e, 0);
+			if (errno != 0 || *e) {
+				fprintf(stderr,
+				    "%s: can't parse length '%s'.\n",
+				    argv0, optarg);
+				exit(2);
+			}
+			if (minlen < 1) {
+				fprintf(stderr,
+				    "%s: MINLEN must not be smaller than 1.\n",
+				    argv0);
+				exit(2);
+			}
 			break;
                 default:
                         fprintf(stderr,
 			    "Usage: %s [-n MINLEN] [FILES...]\n", argv0);
 			exit(2);
 		}
-
-	if (minlen < 1) {
-		fprintf(stderr, "%s: MINLEN must not be smaller than 1.\n",
-		    argv0);
-		exit(2);
-	}
 
 	if (optind == argc)
 		holes(stdin, 0);
