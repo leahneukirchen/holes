@@ -1,0 +1,68 @@
+#!/bin/sh
+printf '1..10\n'
+
+set -e
+
+holes() { "${HOLES:-./holes}" "$@"; }
+
+zeroes() { dd if=/dev/zero bs=${2:-1} count=$1 2>/dev/null; }
+nonzeroes() { zeroes $1 $2 | tr '\0' x; }
+
+check_output() {
+	msg=$1
+        expected="$(cat)"
+        shift
+        if output="$(eval "$@" 2>&1)"; then
+                if [ "$output" = "$expected" ]; then
+                        printf 'ok - %s\n' "$msg"
+                        return
+                fi
+        fi
+        printf 'not ok - %s\n' "$msg"
+        if [ "$output" != "$expected" ]; then
+                printf 'Unexpected output:\n%s\n' "$output" | sed 's/^/# /'
+        fi
+}
+
+check_output 'no hole' 'echo foobar | holes' <<EOF
+EOF
+
+check_output 'big, no hole' 'nonzeroes 1 M | holes' <<EOF
+EOF
+
+check_output 'empty file' 'true | holes' <<EOF
+00000000 0
+EOF
+
+check_output 'small holes' '{ nonzeroes 17; zeroes 35; nonzeroes 67; zeroes 67; } | holes -n1' <<EOF
+00000011 35
+00000077 67
+EOF
+
+check_output 'small, undetected holes' '{ nonzeroes 17; zeroes 35; nonzeroes 67; zeroes 63; } | holes' <<EOF
+EOF
+
+check_output 'medium holes' '{ zeroes 4 1k; nonzeroes 60 1k; zeroes 300 1k; nonzeroes 7 1k; } | holes' <<EOF
+00000000 4096
+00010000 307200
+EOF
+
+check_output 'medium, offsetted holes' '{ zeroes 4090; nonzeroes 60 1k; zeroes 307117; nonzeroes 7 1k; } | holes' <<EOF
+00000000 4090
+0000fffa 307117
+EOF
+
+check_output 'huge holes' '{ zeroes 5 M; nonzeroes 7 M; zeroes 7 M; } | holes' <<EOF
+00000000 5242880
+00c00000 7340032
+EOF
+
+check_output 'huge, offsetted holes' '{ nonzeroes 3636; zeroes 5 M; nonzeroes 7 M; zeroes 7 M; } | holes' <<EOF
+00000e34 5242880
+00c00e34 7340032
+EOF
+
+check_output 'detect non-zeroes' '{ nonzeroes 3636; zeroes 5 M; nonzeroes 7 M; zeroes 7 M; } | tr "\\0" "\\377" | holes -b 0xff' <<EOF
+00000e34 5242880
+00c00e34 7340032
+EOF
