@@ -16,20 +16,37 @@ holes(FILE *input, char *filename)
 {
 	off_t offset = 0;
 	off_t run = 0;	
-	int ch;
+	static char buf[16384];
 
-	while ((ch = getc_unlocked(input)) != EOF) {
-		if (ch == byte) {
-			run++;
-		} else {
-			if (run >= minlen) {
-				if (filename)
-					printf("%s: ", filename);
-				printf("%08lx %ld\n", offset - run, run);
+	int len;
+	int i;
+	char *d;
+
+	while ((len = fread(buf, 1, sizeof buf, input)) >= 1) {
+		if (run == 0) {
+			d = memchr(buf, byte, len);
+			if (!d) {
+				offset += len;
+				continue;
 			}
-			run = 0;
+			i = d - buf;
+			offset += i;
+		} else {
+			i = 0;
 		}
-		offset++;
+		for (; i < len; i++) {
+			if (buf[i] == byte) {
+				run++;
+			} else {
+				if (run >= minlen) {
+					if (filename)
+						printf("%s: ", filename);
+					printf("%08lx %ld\n", offset - run, run);
+				}
+				run = 0;
+			}
+			offset++;
+		}
 	}
 	if (ferror(input)) {
 		fprintf(stderr, "%s: can't read '%s': %s\n",
