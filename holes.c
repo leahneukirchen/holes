@@ -7,7 +7,8 @@
 #include <unistd.h>
 
 ssize_t minlen = 64;
-int ret;
+char byte = 0;
+int ret = 0;
 char *argv0;
 
 void
@@ -18,7 +19,7 @@ holes(FILE *input, char *filename)
 	int ch;
 
 	while ((ch = getc_unlocked(input)) != EOF) {
-		if (ch == 0) {
+		if (ch == byte) {
 			run++;
 		} else {
 			if (run >= minlen) {
@@ -49,12 +50,24 @@ int
 main(int argc, char *argv[])
 {
 	int c, i;
+	long b;
 	char *e;
 
 	argv0 = argv[0];
 
-	while ((c = getopt(argc, argv, "n:")) != -1)
+	while ((c = getopt(argc, argv, "b:n:")) != -1)
 		switch(c) {
+		case 'b':
+			errno = 0;
+			b = strtol(optarg, &e, 0);
+			if (errno != 0 || *e || b < 0 || b > 256) {
+				fprintf(stderr,
+				    "%s: can't parse byte '%s'.\n",
+				    argv0, optarg);
+				exit(2);
+			}
+			byte = b;
+			break;
                 case 'n':
 			errno = 0;
 			minlen = strtoll(optarg, &e, 0);
@@ -73,7 +86,8 @@ main(int argc, char *argv[])
 			break;
                 default:
                         fprintf(stderr,
-			    "Usage: %s [-n MINLEN] [FILES...]\n", argv0);
+			    "Usage: %s [-b BYTE] [-n MINLEN] [FILES...]\n",
+			    argv0);
 			exit(2);
 		}
 

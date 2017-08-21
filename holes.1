@@ -6,6 +6,7 @@
 .Nd find runs of zero bytes
 .Sh SYNOPSIS
 .Nm
+.Op Fl b Ar byte
 .Op Fl n Ar minlen
 .Op Ar files\ ...
 .Sh DESCRIPTION
@@ -18,11 +19,18 @@ When multiple input files are specified,
 .Nm
 prefixes each line with the file name.
 .Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl b Ar byte
+Count runs of
+.Ar byte ,
+a number between 0 and 255,
+instead of zero bytes.
+.It Fl n Ar minlen
+Change minimum size of holes reported.
 By default,
 only holes of at least 64 bytes are reported.
-This can be changed using the
-.Fl n
-option.
+.El
 .Sh EXIT STATUS
 .Ex -std
 .Sh SEE ALSO

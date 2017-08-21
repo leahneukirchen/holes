@@ -4,7 +4,7 @@ NAME
      holes – find runs of zero bytes
 
 SYNOPSIS
-     holes [-n minlen] [files ...]
+     holes [-b byte] [-n minlen] [files ...]
 
 DESCRIPTION
      holes looks for runs of zero bytes (a.k.a. holes) in the specified input
@@ -12,8 +12,15 @@ DESCRIPTION
      hexadecimal) as well as the lengths (in decimal).  When multiple input
      files are specified, holes prefixes each line with the file name.
 
-     By default, only holes of at least 64 bytes are reported.  This can be
-     changed using the -n option.
+     The options are as follows:
+
+     -b byte
+             Count runs of byte, a number between 0 and 255, instead of zero
+             bytes.
+
+     -n minlen
+             Change minimum size of holes reported.  By default, only holes of
+             at least 64 bytes are reported.
 
 EXIT STATUS
      The holes utility exits 0 on success, and >0 if an error occurs.
