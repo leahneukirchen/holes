@@ -1,0 +1,43 @@
+.Dd August 21, 2017
+.Dt HOLES 1
+.Os
+.Sh NAME
+.Nm holes
+.Nd find runs of zero bytes
+.Sh SYNOPSIS
+.Nm
+.Op Fl n Ar minlen
+.Op Ar files\ ...
+.Sh DESCRIPTION
+.Nm
+looks for runs of zero bytes (a.k.a. holes) in the specified input files
+(or the standard input),
+and prints the start adresses (in hexadecimal)
+as well as the lengths (in decimal).
+When multiple input files are specified,
+.Nm
+prefixes each line with the file name.
+.Pp
+By default,
+only holes of at least 64 bytes are reported.
+This can be changed using the
+.Fl n
+option.
+.Sh EXIT STATUS
+.Ex -std
+.Sh SEE ALSO
+.Xr fallocate 1 ,
+.Xr truncate 1 ,
+.Xr virt-sparsify 1
+.Sh AUTHORS
+.An Leah Neukirchen Aq Mt leah@vuxu.org
+.Sh LICENSE
+.Nm
+is in the public domain.
+.Pp
+To the extent possible under law,
+the creator of this work
+has waived all copyright and related or
+neighboring rights to this work.
+.Pp
+.Lk http://creativecommons.org/publicdomain/zero/1.0/

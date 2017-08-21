@@ -1,0 +1,35 @@
+HOLES(1)                    General Commands Manual                   HOLES(1)
+
+NAME
+     holes – find runs of zero bytes
+
+SYNOPSIS
+     holes [-n minlen] [files ...]
+
+DESCRIPTION
+     holes looks for runs of zero bytes (a.k.a. holes) in the specified input
+     files (or the standard input), and prints the start adresses (in
+     hexadecimal) as well as the lengths (in decimal).  When multiple input
+     files are specified, holes prefixes each line with the file name.
+
+     By default, only holes of at least 64 bytes are reported.  This can be
+     changed using the -n option.
+
+EXIT STATUS
+     The holes utility exits 0 on success, and >0 if an error occurs.
+
+SEE ALSO
+     fallocate(1), truncate(1), virt-sparsify(1)
+
+AUTHORS
+     Leah Neukirchen <leah@vuxu.org>
+
+LICENSE
+     holes is in the public domain.
+
+     To the extent possible under law, the creator of this work has waived all
+     copyright and related or neighboring rights to this work.
+
+           http://creativecommons.org/publicdomain/zero/1.0/
+
+Void Linux                      August 21, 2017                     Void Linux
