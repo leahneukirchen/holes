@@ -15,7 +15,7 @@ void
 holes(FILE *input, char *filename)
 {
 	off_t offset = 0;
-	off_t run = 0;	
+	off_t run = 0;
 	static char buf[16384];
 
 	int len;
@@ -55,7 +55,7 @@ holes(FILE *input, char *filename)
 		return;
 	}
 
-	if (offset == 0 ||	// empty file
+	if (offset == 0 ||      // empty file
 	    run >= minlen) {
 		if (filename)
 			printf("%s: ", filename);
@@ -73,7 +73,7 @@ main(int argc, char *argv[])
 	argv0 = argv[0];
 
 	while ((c = getopt(argc, argv, "b:n:")) != -1)
-		switch(c) {
+		switch (c) {
 		case 'b':
 			errno = 0;
 			b = strtol(optarg, &e, 0);
@@ -85,7 +85,7 @@ main(int argc, char *argv[])
 			}
 			byte = b;
 			break;
-                case 'n':
+		case 'n':
 			errno = 0;
 			minlen = strtoll(optarg, &e, 0);
 			if (errno != 0 || *e) {
@@ -101,8 +101,8 @@ main(int argc, char *argv[])
 				exit(2);
 			}
 			break;
-                default:
-                        fprintf(stderr,
+		default:
+			fprintf(stderr,
 			    "Usage: %s [-b BYTE] [-n MINLEN] [FILES...]\n",
 			    argv0);
 			exit(2);
@@ -114,7 +114,7 @@ main(int argc, char *argv[])
 		for (i = optind; i < argc; i++) {
 			FILE *input = (strcmp(argv[i], "-") == 0) ?
 			    stdin : fopen(argv[i], "rb");
-			
+
 			if (!input) {
 				fprintf(stderr, "%s: can't open file '%s': %s\n",
 				    argv0, argv[i], strerror(errno));
