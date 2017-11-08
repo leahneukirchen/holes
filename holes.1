@@ -1,4 +1,4 @@
-.Dd August 21, 2017
+.Dd November 8, 2017
 .Dt HOLES 1
 .Os
 .Sh NAME
@@ -8,6 +8,7 @@
 .Nm
 .Op Fl b Ar byte
 .Op Fl n Ar minlen
+.Op Fl s
 .Op Ar files\ ...
 .Sh DESCRIPTION
 .Nm
@@ -30,6 +31,8 @@ instead of zero bytes.
 Change minimum size of holes reported.
 By default,
 only holes of at least 64 bytes are reported.
+.It Fl s
+Print a summary at the end how many percent of the file are runs of zeroes.
 .El
 .Sh EXIT STATUS
 .Ex -std

@@ -4,7 +4,7 @@ NAME
      holes – find runs of zero bytes
 
 SYNOPSIS
-     holes [-b byte] [-n minlen] [files ...]
+     holes [-b byte] [-n minlen] [-s] [files ...]
 
 DESCRIPTION
      holes looks for runs of zero bytes (a.k.a. holes) in the specified input
@@ -21,6 +21,9 @@ DESCRIPTION
      -n minlen
              Change minimum size of holes reported.  By default, only holes of
              at least 64 bytes are reported.
+
+     -s      Print a summary at the end how many percent of the file are runs
+             of zeroes.
 
 EXIT STATUS
      The holes utility exits 0 on success, and >0 if an error occurs.
@@ -39,4 +42,4 @@ LICENSE
 
            http://creativecommons.org/publicdomain/zero/1.0/
 
-Void Linux                      August 21, 2017                     Void Linux
+Void Linux                     November 8, 2017                     Void Linux
