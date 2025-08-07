@@ -46,7 +46,7 @@ holes(FILE *input, char *filename)
 					if (xflag)
 						printf("%08jx %jd\n", offset - run, run);
 					else
-						printf("%08jd %jd\n", offset - run, run);
+						printf("%010jd %jd\n", offset - run, run);
 					totalz += run;
 				}
 				run = 0;
@@ -68,7 +68,7 @@ holes(FILE *input, char *filename)
 		if (xflag)
 			printf("%08jx %jd\n", offset - run, run);
 		else
-			printf("%08jd %jd\n", offset - run, run);
+			printf("%010jd %jd\n", offset - run, run);
 		totalz += run;
 	}
 
