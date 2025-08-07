@@ -4,7 +4,7 @@ NAME
      holes – find runs of zero bytes
 
 SYNOPSIS
-     holes [-b byte] [-n minlen] [-sx] [files ...]
+     holes [-b byte] [-n minlen] [-Ssx] [files ...]
 
 DESCRIPTION
      holes looks for runs of zero bytes (a.k.a. holes) in the specified input
@@ -22,6 +22,9 @@ DESCRIPTION
              Change minimum size of holes reported.  By default, only holes of
              at least 64 bytes are reported.
 
+     -S      Don't search for zeroes but use SEEK_HOLE to find the sparse
+             areas of the file, according to the filesystem.
+
      -s      Print a summary at the end how many percent of the file are runs
              of zeroes.
 
@@ -31,7 +34,7 @@ EXIT STATUS
      The holes utility exits 0 on success, and >0 if an error occurs.
 
 SEE ALSO
-     fallocate(1), truncate(1), virt-sparsify(1)
+     cp(1), fallocate(1), truncate(1), virt-sparsify(1)
 
 AUTHORS
      Leah Neukirchen <leah@vuxu.org>

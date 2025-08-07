@@ -1,5 +1,7 @@
 /* holes - find holes (= runs of zero bytes) in input files */
 
+#define _GNU_SOURCE
+
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,6 +14,7 @@ int ret = 0;
 char *argv0;
 ssize_t total, totalz;
 int xflag;
+int Sflag;
 
 void
 holes(FILE *input, char *filename)
@@ -75,6 +78,49 @@ holes(FILE *input, char *filename)
 	total += offset;
 }
 
+void
+seek_holes(FILE *input, char *filename)
+{
+	off_t hole = 0;
+	off_t data = 0;
+
+	int fd = fileno(input);
+
+	total = lseek(fd, 0, SEEK_END);
+
+	while (1) {
+		if ((data = lseek(fd, hole, SEEK_DATA)) < 0)
+			break;
+
+		if (filename)
+			printf("%s: ", filename);
+		if (data != hole) {
+			if (xflag)
+				printf("%08jx %jd\n", hole, data - hole);
+			else
+				printf("%010jd %jd\n", hole, data - hole);
+		}
+		totalz += data - hole;
+
+		if ((hole = lseek(fd, data, SEEK_HOLE)) < 0)
+			break;
+	}
+
+	if (data < total)
+		data = total;
+
+	if (total == 0 || hole < total) {
+		if (filename)
+			printf("%s: ", filename);
+		if (xflag)
+			printf("%08jx %jd\n", hole, data - hole);
+		else
+			printf("%010jd %jd\n", hole, data - hole);
+
+		totalz += data - hole;
+	}
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -85,7 +131,7 @@ main(int argc, char *argv[])
 
 	argv0 = argv[0];
 
-	while ((c = getopt(argc, argv, "b:n:sx")) != -1)
+	while ((c = getopt(argc, argv, "b:n:sSx")) != -1)
 		switch (c) {
 		case 'b':
 			errno = 0;
@@ -115,6 +161,7 @@ main(int argc, char *argv[])
 			}
 			break;
 		case 's': sflag++; break;
+		case 'S': Sflag++; break;
 		case 'x': xflag++; break;
 		default:
 			fprintf(stderr,
@@ -135,7 +182,10 @@ main(int argc, char *argv[])
 				    argv0, argv[i], strerror(errno));
 				ret = 1;
 			} else {
-				holes(input, argc - optind > 1 ? argv[i] : 0);
+				if (Sflag)
+					seek_holes(input, argc - optind > 1 ? argv[i] : 0);
+				else
+					holes(input, argc - optind > 1 ? argv[i] : 0);
 			}
 		}
 

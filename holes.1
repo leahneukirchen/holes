@@ -8,7 +8,7 @@
 .Nm
 .Op Fl b Ar byte
 .Op Fl n Ar minlen
-.Op Fl sx
+.Op Fl Ssx
 .Op Ar files\ ...
 .Sh DESCRIPTION
 .Nm
@@ -30,6 +30,10 @@ instead of zero bytes.
 Change minimum size of holes reported.
 By default,
 only holes of at least 64 bytes are reported.
+.It Fl S
+Don't search for zeroes but use
+.Dv SEEK_HOLE
+to find the sparse areas of the file, according to the filesystem.
 .It Fl s
 Print a summary at the end how many percent of the file are runs of zeroes.
 .It Fl x
