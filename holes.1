@@ -1,4 +1,4 @@
-.Dd November 8, 2017
+.Dd August 7, 2025
 .Dt HOLES 1
 .Os
 .Sh NAME
@@ -8,14 +8,13 @@
 .Nm
 .Op Fl b Ar byte
 .Op Fl n Ar minlen
-.Op Fl s
+.Op Fl sx
 .Op Ar files\ ...
 .Sh DESCRIPTION
 .Nm
 looks for runs of zero bytes (a.k.a. holes) in the specified input files
 (or the standard input),
-and prints the start addresses (in hexadecimal)
-as well as the lengths (in decimal).
+and prints the start addresses as well as the lengths (in decimal).
 When multiple input files are specified,
 .Nm
 prefixes each line with the file name.
@@ -33,10 +32,13 @@ By default,
 only holes of at least 64 bytes are reported.
 .It Fl s
 Print a summary at the end how many percent of the file are runs of zeroes.
+.It Fl x
+Print the start addresses as hexadecimal numbers.
 .El
 .Sh EXIT STATUS
 .Ex -std
 .Sh SEE ALSO
+.Xr cp 1 ,
 .Xr fallocate 1 ,
 .Xr truncate 1 ,
 .Xr virt-sparsify 1

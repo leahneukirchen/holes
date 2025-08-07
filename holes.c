@@ -11,6 +11,7 @@ char byte = 0;
 int ret = 0;
 char *argv0;
 ssize_t total, totalz;
+int xflag;
 
 void
 holes(FILE *input, char *filename)
@@ -42,7 +43,10 @@ holes(FILE *input, char *filename)
 				if (run >= minlen) {
 					if (filename)
 						printf("%s: ", filename);
-					printf("%08lx %ld\n", offset - run, run);
+					if (xflag)
+						printf("%08jx %jd\n", offset - run, run);
+					else
+						printf("%08jd %jd\n", offset - run, run);
 					totalz += run;
 				}
 				run = 0;
@@ -61,7 +65,10 @@ holes(FILE *input, char *filename)
 	    run >= minlen) {
 		if (filename)
 			printf("%s: ", filename);
-		printf("%08lx %ld\n", offset - run, run);
+		if (xflag)
+			printf("%08jx %jd\n", offset - run, run);
+		else
+			printf("%08jd %jd\n", offset - run, run);
 		totalz += run;
 	}
 
@@ -78,7 +85,7 @@ main(int argc, char *argv[])
 
 	argv0 = argv[0];
 
-	while ((c = getopt(argc, argv, "b:n:s")) != -1)
+	while ((c = getopt(argc, argv, "b:n:sx")) != -1)
 		switch (c) {
 		case 'b':
 			errno = 0;
@@ -108,9 +115,10 @@ main(int argc, char *argv[])
 			}
 			break;
 		case 's': sflag++; break;
+		case 'x': xflag++; break;
 		default:
 			fprintf(stderr,
-			    "Usage: %s [-b BYTE] [-n MINLEN] [-s] [FILES...]\n",
+			    "Usage: %s [-b BYTE] [-n MINLEN] [-s] [-x] [FILES...]\n",
 			    argv0);
 			exit(2);
 		}

@@ -4,13 +4,13 @@ NAME
      holes – find runs of zero bytes
 
 SYNOPSIS
-     holes [-b byte] [-n minlen] [-s] [files ...]
+     holes [-b byte] [-n minlen] [-sx] [files ...]
 
 DESCRIPTION
      holes looks for runs of zero bytes (a.k.a. holes) in the specified input
-     files (or the standard input), and prints the start addresses (in
-     hexadecimal) as well as the lengths (in decimal).  When multiple input
-     files are specified, holes prefixes each line with the file name.
+     files (or the standard input), and prints the start addresses as well as
+     the lengths (in decimal).  When multiple input files are specified, holes
+     prefixes each line with the file name.
 
      The options are as follows:
 
@@ -24,6 +24,8 @@ DESCRIPTION
 
      -s      Print a summary at the end how many percent of the file are runs
              of zeroes.
+
+     -x      Print the start addresses as hexadecimal numbers.
 
 EXIT STATUS
      The holes utility exits 0 on success, and >0 if an error occurs.
@@ -40,6 +42,6 @@ LICENSE
      To the extent possible under law, the creator of this work has waived all
      copyright and related or neighboring rights to this work.
 
-           http://creativecommons.org/publicdomain/zero/1.0/
+     http://creativecommons.org/publicdomain/zero/1.0/
 
-Void Linux                     November 8, 2017                     Void Linux
+Void Linux                      August 7, 2025                      Void Linux

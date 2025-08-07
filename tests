@@ -3,7 +3,7 @@ printf '1..10\n'
 
 set -e
 
-holes() { "${HOLES:-./holes}" "$@"; }
+holes() { "${HOLES:-./holes}" -x "$@"; }
 
 zeroes() { dd if=/dev/zero bs=${2:-1} count=$1 2>/dev/null; }
 nonzeroes() { zeroes $1 $2 | tr '\0' x; }
