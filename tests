@@ -1,5 +1,5 @@
 #!/bin/sh
-printf '1..10\n'
+printf '1..11\n'
 
 set -e
 
@@ -66,3 +66,13 @@ check_output 'detect non-zeroes' '{ nonzeroes 3636; zeroes 5 M; nonzeroes 7 M; z
 00000e34 5242880
 00c00e34 7340032
 EOF
+
+rm -f sparse.test
+dd if=/dev/zero of=sparse.test bs=1024 count=1024 oseek=1024 2>/dev/null
+echo x | dd of=sparse.test bs=1024 oseek=512 conv=notrunc 2>/dev/null
+# we don't know the fs block size, but the single sparse area should
+# be split into two.
+check_output 'sparse file' 'holes -S sparse.test | wc -l | tr -d " "' <<EOF
+2
+EOF
+rm -f sparse.test
