@@ -81,6 +81,11 @@ holes(FILE *input, char *filename)
 void
 seek_holes(FILE *input, char *filename)
 {
+#ifndef SEEK_HOLE
+	fprintf(stderr, "%s: fatal error: SEEK_HOLE not supported\n",
+	    argv0);
+	exit(-1);
+#else
 	off_t hole = 0;
 	off_t data = 0;
 
@@ -119,6 +124,7 @@ seek_holes(FILE *input, char *filename)
 
 		totalz += data - hole;
 	}
+#endif
 }
 
 int
