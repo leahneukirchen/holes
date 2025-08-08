@@ -1,4 +1,6 @@
 #!/bin/sh
+export LANG=C
+
 printf '1..11\n'
 
 set -e
@@ -27,7 +29,7 @@ check_output() {
 check_output 'no hole' 'echo foobar | holes' <<EOF
 EOF
 
-check_output 'big, no hole' 'nonzeroes 1 M | holes' <<EOF
+check_output 'big, no hole' 'nonzeroes 1 1M | holes' <<EOF
 EOF
 
 check_output 'empty file' 'true | holes' <<EOF
@@ -52,17 +54,17 @@ check_output 'medium, offsetted holes' '{ zeroes 4090; nonzeroes 60 1k; zeroes 3
 0000fffa 307117
 EOF
 
-check_output 'huge holes' '{ zeroes 5 M; nonzeroes 7 M; zeroes 7 M; } | holes' <<EOF
+check_output 'huge holes' '{ zeroes 5 1M; nonzeroes 7 1M; zeroes 7 1M; } | holes' <<EOF
 00000000 5242880
 00c00000 7340032
 EOF
 
-check_output 'huge, offsetted holes' '{ nonzeroes 3636; zeroes 5 M; nonzeroes 7 M; zeroes 7 M; } | holes' <<EOF
+check_output 'huge, offsetted holes' '{ nonzeroes 3636; zeroes 5 1M; nonzeroes 7 1M; zeroes 7 1M; } | holes' <<EOF
 00000e34 5242880
 00c00e34 7340032
 EOF
 
-check_output 'detect non-zeroes' '{ nonzeroes 3636; zeroes 5 M; nonzeroes 7 M; zeroes 7 M; } | tr "\\0" "\\377" | holes -b 0xff' <<EOF
+check_output 'detect non-zeroes' '{ nonzeroes 3636; zeroes 5 1M; nonzeroes 7 1M; zeroes 7 1M; } | tr "\\0" "\\377" | holes -b 0xff' <<EOF
 00000e34 5242880
 00c00e34 7340032
 EOF
